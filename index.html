@@ -21,7 +21,7 @@
       height: 100%;
       height: 100dvh;
       overflow: hidden;
-      background-color: #d6ccbe; /* Entorno exterior */
+      background-color: #d6ccbe;
     }
 
     body {
@@ -47,21 +47,20 @@
       background-image: linear-gradient(180deg, #f7efe4 0%, #eedbc5 50%, #e2cdb3 100%);
     }
 
-    /* CAPA 1: VIDEO DE FONDO OBLIGADO AL TAMAÑO DEL LIENZO */
+    /* CAPA 1: VIDEO DE FONDO OBLIGADO A 900x1700 */
     .bg-video {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Asegura cobertura total 900x1700 sin deformar */
+      object-fit: cover;
       z-index: 1;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.6s ease-in-out;
     }
 
-    /* Se muestra suavemente apenas empieza a reproducirse */
     .bg-video.loaded {
       opacity: 1;
     }
@@ -75,7 +74,7 @@
       height: 100%;
       object-fit: fill;
       z-index: 2;
-      pointer-events: none; /* Permite el clic a los botones */
+      pointer-events: none;
     }
 
     /* CAPA 3: BOTÓN DE AUDIO Y ACCESOS TÁCTILES */
@@ -171,14 +170,14 @@
       background-color: rgba(181, 138, 62, 0.25);
     }
 
-    /* CORTINA / CARRUSEL CONTINUO EN LA FRANJA AZUL INFERIOR */
+    /* CORTINA / CARRUSEL CONTINUO (FONDO 100% TRANSPARENTE SOBRE TU FRANJA GRIS) */
     .ticker-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 4.8%;
-      background-color: #1e75ff;
+      background: transparent; /* Transparente para mostrar el gris de menu.png */
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -207,7 +206,7 @@
       letter-spacing: 0.6px;
       color: #ffffff;
       text-transform: uppercase;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     .ticker-item span.highlight {
@@ -235,7 +234,7 @@
 
   <div class="app-container">
 
-    <!-- 1. VIDEO DE FONDO OBLIGADO A 900x1700 CON TRANSICIÓN SUAVE TRAS EL BEIGE -->
+    <!-- 1. VIDEO DE FONDO DINÁMICO EN LOOP -->
     <video id="bgVideo" class="bg-video" autoplay loop muted playsinline preload="auto">
       <source src="video_fondo.mp4" type="video/mp4">
     </video>
@@ -268,7 +267,7 @@
     <!-- 5. Footer Ubicación (Edificio 2, Interior) -->
     <a href="https://www.google.com/maps/search/?api=1&query=Av.+Las+Condes+12523+Local+5,+Las+Condes,+Santiago" target="_blank" rel="noopener" class="touch-btn btn-ubicacion" title="Cómo llegar al Local 5 (Edificio 2, Interior)"></a>
 
-    <!-- CORTINA INFORMATIVA INFERIOR -->
+    <!-- CORTINA INFORMATIVA INFERIOR (TEXTO SOBRE TRANSPARENTE) -->
     <div class="ticker-bar" title="Información y Horarios">
       <div class="ticker-track">
         <div class="ticker-item">
@@ -293,13 +292,12 @@
   </div>
 
   <script>
-    // Suavizado de carga del video
+    // Suavizado al iniciar el video
     const video = document.getElementById('bgVideo');
     if (video) {
       video.addEventListener('playing', () => {
         video.classList.add('loaded');
       });
-      // Fallback si arranca en caché
       if (video.readyState >= 3) {
         video.classList.add('loaded');
       }
