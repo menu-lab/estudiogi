@@ -42,12 +42,12 @@
       overflow: hidden;
       box-shadow: 0 0 35px rgba(0, 0, 0, 0.28);
 
-      /* FONDO BEIGE MIENTRAS CARGA EL VIDEO */
+      /* Fondo beige mientras carga el video */
       background-color: #eedbc5;
       background-image: linear-gradient(180deg, #f7efe4 0%, #eedbc5 50%, #e2cdb3 100%);
     }
 
-    /* CAPA 1: VIDEO DE FONDO OBLIGADO A 900x1700 */
+    /* CAPA 1: VIDEO DINÁMICO EN LOOP */
     .bg-video {
       position: absolute;
       top: 0;
@@ -170,14 +170,14 @@
       background-color: rgba(181, 138, 62, 0.25);
     }
 
-    /* CORTINA / CARRUSEL CONTINUO (FONDO 100% TRANSPARENTE SOBRE TU FRANJA GRIS) */
+    /* CORTINA / CARRUSEL CONTINUO (TRANSPARENTE SOBRE TU FRANJA GRIS) */
     .ticker-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 4.8%;
-      background: transparent; /* Transparente para mostrar el gris de menu.png */
+      background: transparent;
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -234,9 +234,9 @@
 
   <div class="app-container">
 
-    <!-- 1. VIDEO DE FONDO DINÁMICO EN LOOP -->
+    <!-- 1. VIDEO DE FONDO DINÁMICO ALTERNADO (video_fondo.mp4 / video_fondo_2.mp4) -->
     <video id="bgVideo" class="bg-video" autoplay loop muted playsinline preload="auto">
-      <source src="video_fondo.mp4" type="video/mp4">
+      <source id="videoSource" src="" type="video/mp4">
     </video>
 
     <!-- 2. CAPA SUPERIOR: TU MENÚ EN PNG TRANSPARENTE -->
@@ -292,16 +292,39 @@
   </div>
 
   <script>
-    // Suavizado al iniciar el video
-    const video = document.getElementById('bgVideo');
-    if (video) {
-      video.addEventListener('playing', () => {
-        video.classList.add('loaded');
-      });
-      if (video.readyState >= 3) {
-        video.classList.add('loaded');
+    // SISTEMA DE ROTACIÓN ALTERNADA DE VIDEOS SIN REPETIR
+    (function initVideoRotation() {
+      const videoElement = document.getElementById('bgVideo');
+      const videoSource = document.getElementById('videoSource');
+      
+      const v1 = 'video_fondo.mp4';
+      const v2 = 'video_fondo_2.mp4';
+      
+      // Obtener el último video reproducido desde el almacenamiento local
+      const lastPlayed = localStorage.getItem('last_video_studiogi');
+      let nextVideo = v1;
+
+      if (lastPlayed === v1) {
+        nextVideo = v2;
+      } else {
+        nextVideo = v1;
       }
-    }
+
+      // Guardar el video seleccionado para la siguiente visita
+      localStorage.setItem('last_video_studiogi', nextVideo);
+
+      // Asignar y reproducir
+      videoSource.src = nextVideo;
+      videoElement.load();
+      videoElement.play().catch(() => {});
+
+      videoElement.addEventListener('playing', () => {
+        videoElement.classList.add('loaded');
+      });
+      if (videoElement.readyState >= 3) {
+        videoElement.classList.add('loaded');
+      }
+    })();
 
     // Control de audio interactivo
     const audio = document.getElementById('bgMusic');
