@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -145,6 +144,65 @@
     .btn-ubicacion:active {
       background-color: rgba(181, 138, 62, 0.22);
     }
+
+    /* CORTINA / CARRUSEL CONTINUO EN LA FRANJA AZUL INFERIOR */
+    .ticker-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4.8%;
+      background-color: #1e75ff; /* Tono de la franja azul */
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      z-index: 35;
+      pointer-events: auto;
+    }
+
+    .ticker-track {
+      display: flex;
+      white-space: nowrap;
+      width: max-content;
+      animation: marquee 24s linear infinite;
+    }
+
+    .ticker-bar:hover .ticker-track,
+    .ticker-bar:active .ticker-track {
+      animation-play-state: paused;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      padding-right: 48px;
+      font-size: clamp(14px, 2.1vh, 18px);
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    }
+
+    .ticker-item span.highlight {
+      color: #ffeb3b;
+      margin: 0 6px;
+    }
+
+    .ticker-dot {
+      display: inline-block;
+      margin: 0 14px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
   </style>
 </head>
 <body>
@@ -165,7 +223,7 @@
     <a href="https://studiogi.cl" target="_blank" rel="noopener" class="touch-btn btn-agenda" title="Agenda tu Clase"></a>
 
     <!-- Botón 2: Contáctanos y Conversemos (WhatsApp Directo y Amable) -->
-    <a href="https://wa.me/56993001478?text=%C2%A1Hola%20Studio%20Gi!%20Me%20gustar%C3%ADa%20conversar%20con%20ustedes%20sobre%20sus%20clases%20de%20Pilates%20y%20resolver%20algunas%20dudas.%20Mi%20nombre%20es:%20" target="_blank" rel="noopener" class="touch-btn btn-whatsapp" title="Contáctanos y Conversemos"></a>
+    <a href="https://wa.me/56993001478?text=%C2%A1Hola%20Studio%20Gi!%20Me%20gustar%C3%ADa%20conversar%20con%20ustedes%20sobre%20sus%20clases%20de%20Pilates%20y%20agendar%20mi%20clase%20de%20prueba%20gratis.%20Mi%20nombre%20es:%20" target="_blank" rel="noopener" class="touch-btn btn-whatsapp" title="Contáctanos y Conversemos"></a>
 
     <!-- Botón 3: Nuestro Estudio & Web -->
     <a href="https://studiogi.cl" target="_blank" rel="noopener" class="touch-btn btn-web" title="Nuestro Estudio y Web"></a>
@@ -175,6 +233,30 @@
 
     <!-- Botón 5: Footer Ubicación Google Maps (Av. Las Condes 12523 Local 5, Edificio 2 Interior) -->
     <a href="https://www.google.com/maps/search/?api=1&query=Av.+Las+Condes+12523+Local+5,+Las+Condes,+Santiago" target="_blank" rel="noopener" class="touch-btn btn-ubicacion" title="Cómo llegar al Local 5 (Edificio 2, Interior)"></a>
+
+    <!-- CORTINA INFORMATIVA INFERIOR (CARRUSEL DERECHA A IZQUIERDA) -->
+    <div class="ticker-bar" title="Información y Horarios">
+      <div class="ticker-track">
+        <!-- Bloque de texto 1 -->
+        <div class="ticker-item">
+          ✨ <span class="highlight">CLASE DE PRUEBA GRATIS (55 MIN)</span>
+          <span class="ticker-dot">•</span>
+          ⏰ HORARIOS: LUNES A SÁBADO DE 07:00 A 21:00 HRS
+          <span class="ticker-dot">•</span>
+          🌿 BIENESTAR, FUERZA & CONTROL
+          <span class="ticker-dot">•</span>
+        </div>
+        <!-- Bloque de texto 2 (para bucle continuo infinito y suave) -->
+        <div class="ticker-item">
+          ✨ <span class="highlight">CLASE DE PRUEBA GRATIS (55 MIN)</span>
+          <span class="ticker-dot">•</span>
+          ⏰ HORARIOS: LUNES A SÁBADO DE 07:00 A 21:00 HRS
+          <span class="ticker-dot">•</span>
+          🌿 BIENESTAR, FUERZA & CONTROL
+          <span class="ticker-dot">•</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
