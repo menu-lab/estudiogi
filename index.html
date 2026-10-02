@@ -21,7 +21,7 @@
       height: 100%;
       height: 100dvh;
       overflow: hidden;
-      background-color: #e5ded5;
+      background-color: #d6ccbe; /* Entorno exterior */
     }
 
     body {
@@ -39,15 +39,46 @@
       width: calc(100dvh * (900 / 1700));
       max-width: 100vw;
       aspect-ratio: 900 / 1700;
-      background-image: url('menu.jpg');
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
       overflow: hidden;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.28);
+
+      /* FONDO BEIGE MIENTRAS CARGA EL VIDEO */
+      background-color: #eedbc5;
+      background-image: linear-gradient(180deg, #f7efe4 0%, #eedbc5 50%, #e2cdb3 100%);
     }
 
-    /* Reproductor / Botón de Música de Fondo (Superior Izquierda) */
+    /* CAPA 1: VIDEO DE FONDO OBLIGADO AL TAMAÑO DEL LIENZO */
+    .bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Asegura cobertura total 900x1700 sin deformar */
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out;
+    }
+
+    /* Se muestra suavemente apenas empieza a reproducirse */
+    .bg-video.loaded {
+      opacity: 1;
+    }
+
+    /* CAPA 2: TU MENÚ EN PNG TRANSPARENTE */
+    .menu-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      z-index: 2;
+      pointer-events: none; /* Permite el clic a los botones */
+    }
+
+    /* CAPA 3: BOTÓN DE AUDIO Y ACCESOS TÁCTILES */
     #soundToggle {
       position: absolute;
       top: 1.8%;
@@ -60,9 +91,9 @@
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(4px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       transition: transform 0.15s ease;
     }
 
@@ -96,11 +127,10 @@
 
     .touch-btn:active {
       transform: scale(0.985);
-      background-color: rgba(181, 138, 62, 0.15);
+      background-color: rgba(181, 138, 62, 0.18);
     }
 
-    /* Coordenadas precisas calibradas sobre menu.jpg */
-    /* 1. Agenda tu Clase */
+    /* Coordenadas calibradas sobre el lienzo 900x1700 */
     .btn-agenda {
       top: 32.8%;
       left: 10.5%;
@@ -108,7 +138,6 @@
       height: 7.2%;
     }
 
-    /* 2. Contáctanos y Conversemos (WhatsApp) */
     .btn-whatsapp {
       top: 43.6%;
       left: 10.5%;
@@ -116,7 +145,6 @@
       height: 8.6%;
     }
 
-    /* 3. Nuestro Estudio & Web */
     .btn-web {
       top: 54.8%;
       left: 10.5%;
@@ -124,7 +152,6 @@
       height: 8.6%;
     }
 
-    /* 4. Síguenos en Instagram */
     .btn-instagram {
       top: 66.2%;
       left: 10.5%;
@@ -132,7 +159,6 @@
       height: 8.6%;
     }
 
-    /* 5. Footer Fijo: Dirección y Geolocalización (Edificio 2) */
     .btn-ubicacion {
       top: 79.2%;
       left: 4%;
@@ -142,7 +168,7 @@
     }
 
     .btn-ubicacion:active {
-      background-color: rgba(181, 138, 62, 0.22);
+      background-color: rgba(181, 138, 62, 0.25);
     }
 
     /* CORTINA / CARRUSEL CONTINUO EN LA FRANJA AZUL INFERIOR */
@@ -152,7 +178,7 @@
       left: 0;
       width: 100%;
       height: 4.8%;
-      background-color: #1e75ff; /* Tono de la franja azul */
+      background-color: #1e75ff;
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -208,36 +234,43 @@
 <body>
 
   <div class="app-container">
-    <!-- Pista de Audio Zen / Ambiente Pilates -->
+
+    <!-- 1. VIDEO DE FONDO OBLIGADO A 900x1700 CON TRANSICIÓN SUAVE TRAS EL BEIGE -->
+    <video id="bgVideo" class="bg-video" autoplay loop muted playsinline preload="auto">
+      <source src="video_fondo.mp4" type="video/mp4">
+    </video>
+
+    <!-- 2. CAPA SUPERIOR: TU MENÚ EN PNG TRANSPARENTE -->
+    <img src="menu.png" alt="Menú Studio Gi" class="menu-overlay">
+
+    <!-- 3. PISTA DE AUDIO Y TOGGLE -->
     <audio id="bgMusic" loop preload="auto" src="musica_studiogi.mp3"></audio>
 
-    <!-- Botón Toggle de Sonido -->
     <div id="soundToggle" class="muted" title="Activar/Desactivar Música">
       <svg id="soundIcon" viewBox="0 0 24 24">
-        <!-- Icono mudo inicial -->
         <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
       </svg>
     </div>
 
-    <!-- Botón 1: Agenda tu Clase (Plataforma Externa de Reservas) -->
+    <!-- BOTONES TÁCTILES TRANSPARENTES -->
+    <!-- 1. Agenda tu Clase -->
     <a href="https://studiogi.cl" target="_blank" rel="noopener" class="touch-btn btn-agenda" title="Agenda tu Clase"></a>
 
-    <!-- Botón 2: Contáctanos y Conversemos (WhatsApp Directo y Amable) -->
+    <!-- 2. Contáctanos y Conversemos (WhatsApp) -->
     <a href="https://wa.me/56993001478?text=%C2%A1Hola%20Studio%20Gi!%20Me%20gustar%C3%ADa%20conversar%20con%20ustedes%20sobre%20sus%20clases%20de%20Pilates%20y%20agendar%20mi%20clase%20de%20prueba%20gratis.%20Mi%20nombre%20es:%20" target="_blank" rel="noopener" class="touch-btn btn-whatsapp" title="Contáctanos y Conversemos"></a>
 
-    <!-- Botón 3: Nuestro Estudio & Web -->
+    <!-- 3. Nuestro Estudio & Web -->
     <a href="https://studiogi.cl" target="_blank" rel="noopener" class="touch-btn btn-web" title="Nuestro Estudio y Web"></a>
 
-    <!-- Botón 4: Síguenos en Instagram -->
+    <!-- 4. Síguenos en Instagram -->
     <a href="https://www.instagram.com/studio.gi.pilates" target="_blank" rel="noopener" class="touch-btn btn-instagram" title="Instagram @studio.gi.pilates"></a>
 
-    <!-- Botón 5: Footer Ubicación Google Maps (Av. Las Condes 12523 Local 5, Edificio 2 Interior) -->
+    <!-- 5. Footer Ubicación (Edificio 2, Interior) -->
     <a href="https://www.google.com/maps/search/?api=1&query=Av.+Las+Condes+12523+Local+5,+Las+Condes,+Santiago" target="_blank" rel="noopener" class="touch-btn btn-ubicacion" title="Cómo llegar al Local 5 (Edificio 2, Interior)"></a>
 
-    <!-- CORTINA INFORMATIVA INFERIOR (CARRUSEL DERECHA A IZQUIERDA) -->
+    <!-- CORTINA INFORMATIVA INFERIOR -->
     <div class="ticker-bar" title="Información y Horarios">
       <div class="ticker-track">
-        <!-- Bloque de texto 1 -->
         <div class="ticker-item">
           ✨ <span class="highlight">CLASE DE PRUEBA GRATIS (55 MIN)</span>
           <span class="ticker-dot">•</span>
@@ -246,7 +279,6 @@
           🌿 BIENESTAR, FUERZA & CONTROL
           <span class="ticker-dot">•</span>
         </div>
-        <!-- Bloque de texto 2 (para bucle continuo infinito y suave) -->
         <div class="ticker-item">
           ✨ <span class="highlight">CLASE DE PRUEBA GRATIS (55 MIN)</span>
           <span class="ticker-dot">•</span>
@@ -257,9 +289,22 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <script>
+    // Suavizado de carga del video
+    const video = document.getElementById('bgVideo');
+    if (video) {
+      video.addEventListener('playing', () => {
+        video.classList.add('loaded');
+      });
+      // Fallback si arranca en caché
+      if (video.readyState >= 3) {
+        video.classList.add('loaded');
+      }
+    }
+
     // Control de audio interactivo
     const audio = document.getElementById('bgMusic');
     const soundToggle = document.getElementById('soundToggle');
