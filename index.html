@@ -234,10 +234,8 @@
 
   <div class="app-container">
 
-    <!-- 1. VIDEO DE FONDO DINÁMICO ALTERNADO (video_fondo.mp4 / video_fondo_2.mp4) -->
-    <video id="bgVideo" class="bg-video" autoplay loop muted playsinline preload="auto">
-      <source id="videoSource" src="" type="video/mp4">
-    </video>
+    <!-- 1. VIDEO DE FONDO DINÁMICO (SRC DIRECTO) -->
+    <video id="bgVideo" class="bg-video" autoplay loop muted playsinline preload="auto"></video>
 
     <!-- 2. CAPA SUPERIOR: TU MENÚ EN PNG TRANSPARENTE -->
     <img src="menu.png" alt="Menú Studio Gi" class="menu-overlay">
@@ -252,8 +250,8 @@
     </div>
 
     <!-- BOTONES TÁCTILES TRANSPARENTES -->
-    <!-- 1. Agenda tu Clase -->
-    <a href="https://studiogi.cl" target="_blank" rel="noopener" class="touch-btn btn-agenda" title="Agenda tu Clase"></a>
+    <!-- 1. Agenda tu Clase (Actualizado a BoxMagic Market) -->
+    <a href="https://boxmagic.cl/market/StudioGIPilates20?order=price-asc" target="_blank" rel="noopener" class="touch-btn btn-agenda" title="Agenda tu Clase"></a>
 
     <!-- 2. Contáctanos y Conversemos (WhatsApp) -->
     <a href="https://wa.me/56993001478?text=%C2%A1Hola%20Studio%20Gi!%20Me%20gustar%C3%ADa%20conversar%20con%20ustedes%20sobre%20sus%20clases%20de%20Pilates%20y%20agendar%20mi%20clase%20de%20prueba%20gratis.%20Mi%20nombre%20es:%20" target="_blank" rel="noopener" class="touch-btn btn-whatsapp" title="Contáctanos y Conversemos"></a>
@@ -292,31 +290,29 @@
   </div>
 
   <script>
-    // SISTEMA DE ROTACIÓN ALTERNADA DE VIDEOS SIN REPETIR
+    // SISTEMA DE ROTACIÓN ALTERNADA (video_fondo.mp4 / video_fondo2.mp4)
     (function initVideoRotation() {
       const videoElement = document.getElementById('bgVideo');
-      const videoSource = document.getElementById('videoSource');
       
       const v1 = 'video_fondo.mp4';
-      const v2 = 'video_fondo_2.mp4';
+      const v2 = 'video_fondo2.mp4';
       
-      // Obtener el último video reproducido desde el almacenamiento local
       const lastPlayed = localStorage.getItem('last_video_studiogi');
       let nextVideo = v1;
 
+      // Si la última vez se vio video_fondo.mp4, reproduce video_fondo2.mp4; si no, video_fondo.mp4
       if (lastPlayed === v1) {
         nextVideo = v2;
       } else {
         nextVideo = v1;
       }
 
-      // Guardar el video seleccionado para la siguiente visita
       localStorage.setItem('last_video_studiogi', nextVideo);
 
-      // Asignar y reproducir
-      videoSource.src = nextVideo;
+      // Carga directa en el elemento de video
+      videoElement.src = nextVideo;
       videoElement.load();
-      videoElement.play().catch(() => {});
+      videoElement.play().catch(e => console.log('Autoplay muted:', e));
 
       videoElement.addEventListener('playing', () => {
         videoElement.classList.add('loaded');
@@ -332,7 +328,7 @@
     const soundIcon = document.getElementById('soundIcon');
 
     const iconMuted = 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z';
-    const iconActive = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z';
+    const iconActive = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77z';
 
     soundToggle.addEventListener('click', () => {
       if (audio.paused) {
